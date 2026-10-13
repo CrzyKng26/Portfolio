@@ -1,0 +1,11 @@
+---
+import Studio from '../layouts/Studio.astro';
+import ProjectArt from '../components/studio/ProjectArt.astro';
+import {projects} from '../data/portfolio';
+---
+<Studio title="Selected Works — Balachander Kannan">
+  <section class="work-index section-pad">
+    <span class="micro-label">An independent practice / {projects.length.toString().padStart(2,'0')} selected projects</span><h1>Things I<br/><i>actually built.</i></h1>
+    <div class="project-index-grid">{projects.map((project,i)=><a href={`/work/${project.slug}/`} class="project-index-card"><ProjectArt project={project} eager={i<2}/><div><h2>{project.title}</h2><span>↗</span></div><p class="micro-label">{project.category} · {project.status}</p></a>)}</div>
+  </section>
+</Studio>

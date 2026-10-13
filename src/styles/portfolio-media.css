@@ -1,0 +1,75 @@
+/* Preserve the screenshot's typography and full viewport at every card size. */
+.project-art.project-screenshot {
+  display: flex;
+  align-items: center;
+  background: #08090d;
+  border: 1px solid #ffffff16;
+}
+.project-art.project-screenshot > img {
+  object-fit: contain;
+  object-position: center;
+  filter: none;
+}
+.project-art.project-screenshot.the-hooked-tales { background: #aa1117; }
+
+.about-columns { grid-template-columns: 1.1fr 1fr; gap: 9%; }
+.about-identity { display: grid; grid-template-columns: 154px 1fr; gap: 28px; align-items: start; }
+.profile-portrait { margin: 0; }
+.profile-portrait > img {
+  width: 100%;
+  aspect-ratio: 7 / 9;
+  height: auto;
+  object-fit: cover;
+  border: 1px solid #ffffff25;
+  border-radius: 2px;
+}
+.profile-portrait figcaption { display: grid; gap: 6px; padding-top: 15px; }
+.profile-portrait figcaption > span:first-child { font-size: 12px; line-height: 1.5; }
+.profile-portrait .micro-label { font-size: 9px; color: var(--muted); }
+.about-identity .large-copy { font-size: clamp(23px, 2vw, 30px); }
+
+.project-preview { margin-top: 110px; }
+.project-preview .section-heading { margin-bottom: 35px; }
+.project-preview .section-heading h2 { font-size: clamp(28px, 4vw, 50px); }
+.browser-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 15px 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px 8px 0 0;
+  background: #12121a;
+  color: #a8a9b9;
+  font: 10px var(--mono);
+}
+.browser-dots { display: flex; gap: 5px; }
+.browser-dots i { width: 5px; height: 5px; background: #5a5b6c; border-radius: 50%; }
+.project-preview figure > a { display: block; border: 1px solid var(--line); border-top: 0; }
+.project-preview img { width: 100%; height: auto; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .works { height: var(--gallery-height, 300svh); }
+}
+@media (min-width: 761px) {
+  .project-index-grid > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .project-index-grid > :last-child:nth-child(odd) .project-art { aspect-ratio: 2 / 1; }
+}
+@media (min-width: 761px) and (max-width: 1050px) {
+  .about-identity { grid-template-columns: 125px 1fr; gap: 20px; }
+  .about-columns { gap: 6%; }
+}
+@media (max-width: 760px) {
+  .about-columns { grid-template-columns: 1fr; gap: 40px; }
+  .about-identity { grid-template-columns: 126px 1fr; gap: 24px; }
+  .about-identity .large-copy { font-size: clamp(20px, 5.8vw, 28px); }
+  .project-preview { margin-top: 70px; }
+  .project-preview .section-heading { margin-bottom: 25px; }
+  .browser-bar { padding: 12px; gap: 10px; font-size: 8px; }
+}
+@media (max-width: 380px) {
+  .about-identity { grid-template-columns: 112px 1fr; gap: 18px; }
+}
+@media (prefers-reduced-motion: reduce) and (max-width: 760px) {
+  .gallery { grid-template-columns: 1fr; }
+}

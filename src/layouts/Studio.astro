@@ -1,0 +1,44 @@
+---
+import '../styles/studio.css';
+import '../styles/portfolio-media.css';
+import '../styles/identity.css';
+import { profile } from '../data/portfolio';
+const { title = 'Balachander Kannan — Independent Developer', description = profile.intro, home = false } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#050509" />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/mark.svg" />
+    {home && <link rel="preload" as="font" href="/fonts/cormorant-garamond-semibold.woff2" type="font/woff2" crossorigin />}
+    {home && <link rel="preload" as="image" href="/images/profile/kannan-hero-1080.webp" imagesrcset="/images/profile/kannan-hero-720.webp 720w, /images/profile/kannan-hero-1080.webp 1080w" imagesizes="(max-width: 760px) 100vw, 80vw" />}
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+      <a href="/" class="brand" aria-label="Kannan — home">K<span class="brand-a">A</span>NNAN</a>
+      <nav class="desktop-nav" aria-label="Primary navigation">
+        <a href="/#works">Works</a><a href="/#about">About</a><a href="/#experience">Experience</a><a href="/#capabilities">Capabilities</a>
+      </nav>
+      <a class="contact-pill" href="/#contact">Let’s talk <span aria-hidden="true">↗</span></a>
+      <button class="sound-button" aria-label="Enable ambient sound" aria-pressed="false"><span></span><span></span><span></span><span></span></button>
+      <button class="menu-button" aria-expanded="false" aria-controls="mobile-menu">Menu <span>+</span></button>
+    </header>
+    <nav id="mobile-menu" class="mobile-menu" aria-label="Mobile navigation" hidden>
+      <a href="/#works">Works</a><a href="/#about">About</a><a href="/#experience">Experience</a><a href="/#capabilities">Capabilities</a><a href="/#contact">Contact ↗</a>
+    </nav>
+    <main id="swup" class="transition-page" data-home={home}>
+      <div id="main-content"><slot /></div>
+    </main>
+    <footer class="site-footer">
+      <a class="footer-name" href="/">KANNAN<span>✳</span></a>
+      <div class="footer-links"><a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn ↗</a><a href={profile.original} target="_blank" rel="noreferrer">Original portfolio ↗</a><a href="/#works">Selected work</a></div>
+      <div class="footer-meta"><span>Chennai, India</span><span>© {new Date().getFullYear()} Balachander Kannan</span><a href="#main-content">Back to top ↑</a></div>
+    </footer>
+    <script>import '../scripts/site';</script>
+  </body>
+</html>

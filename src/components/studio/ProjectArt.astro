@@ -1,0 +1,6 @@
+---
+const { project, eager = false } = Astro.props;
+---
+<div class:list={['project-art', 'project-screenshot', project.slug]}>
+  <img src={project.image} alt={project.art} width="1200" height="800" loading={eager ? 'eager' : 'lazy'} />
+</div>

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "kannan-main",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["astro", "dev", "--host", "127.0.0.1", "--port", "3006", "--ignore-lock"],
+      "port": 3006
+    }
+  ]
+}

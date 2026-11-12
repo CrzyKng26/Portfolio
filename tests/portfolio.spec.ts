@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 import {mkdir} from 'node:fs/promises';
 
+// Existing journeys start after the preloader; tests/upgrade.spec.ts covers the gate itself.
+test.beforeEach(async({page})=>{await page.addInitScript(()=>sessionStorage.setItem('kannan:entered','1'));});
+
 test('home, real content, WebGL, gallery and Swup navigation',async({page})=>{
   const errors:string[]=[];
   page.on('pageerror',e=>errors.push(e.message));

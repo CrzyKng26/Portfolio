@@ -1,0 +1,133 @@
+/* Motion layer: preloader, page curtain, cursor, scroll progress, marquee and split text.
+   Every effect has a reduced-motion or no-JS path that leaves content readable. */
+
+:root {
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-in-out: cubic-bezier(.76, 0, .24, 1);
+  --highlight: linear-gradient(90deg, transparent, #ffffffd0 48%, #c9cbff 52%, transparent);
+}
+
+/* ---------- Preloader ---------- */
+.preloader { display: none; }
+html.js:not(.preloaded) .preloader {
+  position: fixed; inset: 0; z-index: 100; display: grid; place-items: center;
+  background: #050509; color: var(--ink); overflow: hidden;
+}
+html.js:not(.preloaded) body { overflow: hidden; }
+.preloader-lines { position: absolute; inset: 0; }
+.preloader-lines span {
+  position: absolute; left: -40%; width: 180%; height: 1px;
+  top: calc(12% + var(--l) * 9.5%);
+  background: var(--highlight); opacity: 0;
+  transform: translateX(-60%) rotate(-8deg);
+  animation: preloader-sweep 2.4s var(--ease-in-out) calc(var(--l) * .07s) infinite;
+}
+@keyframes preloader-sweep {
+  0% { transform: translateX(-60%) rotate(-8deg); opacity: 0; }
+  30% { opacity: .55; }
+  100% { transform: translateX(40%) rotate(-8deg); opacity: 0; }
+}
+.preloader-mark { position: relative; overflow: hidden; }
+.preloader-k {
+  display: block; font: 600 clamp(140px, 22vw, 320px)/.82 'Kannan Display', serif;
+  background: linear-gradient(100deg, #3b3c55 0 40%, #ffffff 50%, #3b3c55 60% 100%);
+  background-size: 300% 100%; background-position: 100% 0;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: preloader-shine 2.2s var(--ease-in-out) infinite;
+}
+@keyframes preloader-shine { to { background-position: 0 0; } }
+.preloader-meta {
+  position: absolute; left: var(--pad); right: var(--pad); bottom: 38px;
+  display: flex; justify-content: space-between; color: var(--muted);
+}
+.preloader-count { font-variant-numeric: tabular-nums; color: var(--ink); }
+.preloader-gate {
+  position: absolute; left: 50%; bottom: 16vh; transform: translateX(-50%);
+  display: grid; justify-items: center; gap: 22px; opacity: 0; visibility: hidden;
+  transition: opacity .6s var(--ease-out), visibility .6s;
+}
+.preloader.is-ready .preloader-gate { opacity: 1; visibility: visible; }
+.preloader-gate p { color: var(--muted); }
+.preloader-gate div { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.preloader-gate button {
+  font: 12px var(--mono); letter-spacing: .04em; color: var(--ink); cursor: pointer;
+  border: 1px solid #ffffff55; background: transparent; border-radius: 40px; padding: 15px 26px;
+  transition: background .3s, color .3s, border-color .3s;
+}
+.preloader-gate button:hover, .preloader-gate button:focus-visible { background: var(--ink); color: #050509; border-color: var(--ink); }
+.preloader.is-leaving { pointer-events: none; }
+
+/* ---------- Page transition curtain (Swup waits on .transition-* elements) ---------- */
+.transition-curtain {
+  position: fixed; inset: 0; z-index: 90; pointer-events: none;
+  background: #07070b; transform: translateY(101%);
+  display: grid; place-items: center;
+}
+html:not(.is-changing) .transition-curtain { visibility: hidden; }
+html.is-changing .transition-curtain { transition: transform .75s var(--ease-in-out); }
+html.is-animating.is-leaving .transition-curtain { transform: translateY(0); }
+html.is-rendering:not(.is-animating) .transition-curtain { transform: translateY(-101%); }
+.curtain-line { position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--highlight); }
+.curtain-mark { font: 600 72px/1 'Kannan Display', serif; color: #2c2d42; }
+
+/* ---------- Scroll progress ---------- */
+.scroll-progress { position: fixed; left: 0; right: 0; top: 0; height: 2px; z-index: 60; pointer-events: none; }
+.scroll-progress span { display: block; height: 100%; background: linear-gradient(90deg, var(--blue), #fff); transform-origin: 0 50%; transform: scaleX(0); }
+
+/* ---------- Cursor (fine pointers only) ---------- */
+.cursor { display: none; }
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html.has-cursor .cursor { display: block; position: fixed; left: 0; top: 0; z-index: 95; pointer-events: none; mix-blend-mode: difference; }
+  html.has-cursor, html.has-cursor a, html.has-cursor button { cursor: none; }
+  .cursor-dot { position: absolute; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: #fff; }
+  .cursor-ring {
+    position: absolute; width: 38px; height: 38px; margin: -19px 0 0 -19px; border-radius: 50%;
+    border: 1px solid #ffffffa0; display: grid; place-items: center;
+    transition: width .45s var(--ease-out), height .45s var(--ease-out), margin .45s var(--ease-out), background .3s, border-color .3s;
+  }
+  .cursor-label { font: 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #050509; opacity: 0; transition: opacity .2s; white-space: nowrap; }
+  .cursor.is-hover .cursor-ring { width: 58px; height: 58px; margin: -29px 0 0 -29px; }
+  .cursor.has-label .cursor-ring { width: 92px; height: 92px; margin: -46px 0 0 -46px; background: #fff; border-color: #fff; }
+  .cursor.has-label .cursor-label { opacity: 1; }
+  .cursor.has-label .cursor-dot, .cursor.is-hidden { opacity: 0; }
+  .cursor.is-down .cursor-ring { transform: scale(.85); }
+}
+
+/* ---------- Velocity marquee ---------- */
+.velocity-marquee {
+  position: relative; z-index: 3; overflow: hidden; padding: 34px 0;
+  border-block: 1px solid var(--line); background: #050509;
+}
+.velocity-track { display: flex; width: max-content; will-change: transform; }
+.velocity-track span {
+  font: 600 clamp(54px, 8vw, 128px)/1 'Kannan Display', serif; letter-spacing: -.02em;
+  white-space: nowrap; padding-right: .3em; color: transparent; -webkit-text-stroke: 1px #ffffff55;
+}
+.velocity-track span i { font-style: normal; color: var(--blue); -webkit-text-stroke: 0; font-size: .5em; vertical-align: middle; padding: 0 .35em; }
+
+/* ---------- Split text ---------- */
+[data-split] .split-line { overflow: hidden; padding-bottom: .08em; margin-bottom: -.08em; }
+[data-split] .split-line > * { display: inline-block; will-change: transform; }
+
+/* ---------- Highlight sweep on the hero wordmark ---------- */
+/* .hero-wordmark is already absolutely positioned, so ::after can anchor to it. */
+.hero-wordmark::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, #ffffff40 48%, #ffffff10 52%, transparent 62%);
+  background-size: 250% 100%; background-position: 130% 0; mix-blend-mode: overlay;
+}
+html.entered .hero-wordmark::after { animation: wordmark-sweep 1.8s var(--ease-in-out) .5s both; }
+@keyframes wordmark-sweep { to { background-position: -40% 0; } }
+
+/* Magnetic targets need a transform origin that feels physical. */
+[data-magnetic] { will-change: transform; }
+
+/* ---------- Video slots (ready for Higgsfield / rendered clips) ---------- */
+.project-art video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .5s var(--ease-out); }
+.gallery-card:hover .project-art video, .project-index-card:hover .project-art video { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader-lines span, .preloader-k { animation: none; }
+  .transition-curtain { display: none; }
+  html.entered .hero-wordmark::after { animation: none; }
+}

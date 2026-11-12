@@ -25,6 +25,11 @@ For production browser verification, preview on another port and set `PLAYWRIGHT
 ## Editing
 
 - `src/data/portfolio.ts`: profile, four visible projects and capabilities.
+- `src/data/portfolio.ts` → `credentials`: the certifications shown in the Credentials section.
+- `src/data/alias.ts`: the Autodesk Alias garage catalogue. `/alias/` is private: it is built only by `npm run dev` or when `PUBLIC_ALIAS_GARAGE=true`, and shows labelled placeholder cars until real models are added.
+- `src/scripts/motion.ts` and `src/styles/motion.css`: preloader and sound gate, cursor, page curtain, split-text reveals, marquee, hero entrance.
+- `src/scripts/garage/`: garage engine (bays, turntables, inspect, Zebra/Wire/Clay modes).
+- `PROJECT_TRACKER.md` and `docs/AWWWARDS_UPGRADE_PLAN.md`: plan and progress log.
 - `src/data/portfolio-under-review.ts`: four preserved projects tagged `#under-review`; not imported by the public website.
 - `src/pages/`: home, work index and generated project detail pages.
 - `src/layouts/Studio.astro`: shared header, footer and metadata.

@@ -1,6 +1,9 @@
 ---
+// `project.video` is optional: drop a short muted loop (e.g. a Higgsfield clip, ≤ 3 MB WebM/MP4)
+// into public/videos/ and set `video: '/videos/<slug>.mp4'` on the project to get a hover preview.
 const { project, eager = false } = Astro.props;
 ---
 <div class:list={['project-art', 'project-screenshot', project.slug]}>
   <img src={project.image} alt={project.art} width="1200" height="800" loading={eager ? 'eager' : 'lazy'} />
+  {project.video && <video src={project.video} muted loop playsinline autoplay preload="metadata" aria-hidden="true"></video>}
 </div>

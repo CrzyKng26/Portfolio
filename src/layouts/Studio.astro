@@ -2,8 +2,10 @@
 import '../styles/studio.css';
 import '../styles/portfolio-media.css';
 import '../styles/identity.css';
+import '../styles/motion.css';
+import '../styles/credentials.css';
 import { profile } from '../data/portfolio';
-const { title = 'Balachander Kannan — Independent Developer', description = profile.intro, home = false } = Astro.props;
+const { title = 'Balachander Kannan — Independent Developer', description = profile.intro, home = false, noindex = false } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -13,11 +15,28 @@ const { title = 'Balachander Kannan — Independent Developer', description = pr
     <meta name="description" content={description} />
     <meta name="theme-color" content="#050509" />
     <title>{title}</title>
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <script is:inline>
+      // Runs before paint: the preloader shows only on the first visit of a session.
+      (function(){var d=document.documentElement;d.classList.add('js');try{if(sessionStorage.getItem('kannan:entered'))d.classList.add('preloaded');}catch(e){d.classList.add('preloaded');}})();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/mark.svg" />
     {home && <link rel="preload" as="font" href="/fonts/cormorant-garamond-semibold.woff2" type="font/woff2" crossorigin />}
     {home && <link rel="preload" as="image" href="/images/profile/kannan-hero-1080.webp" imagesrcset="/images/profile/kannan-hero-720.webp 720w, /images/profile/kannan-hero-1080.webp 1080w" imagesizes="(max-width: 760px) 100vw, 80vw" />}
   </head>
   <body>
+    <div class="preloader" data-preloader role="dialog" aria-modal="true" aria-label="Welcome">
+      <div class="preloader-lines" aria-hidden="true">{Array.from({length:9},(_,i)=><span style={`--l:${i}`}></span>)}</div>
+      <div class="preloader-mark" aria-hidden="true"><span class="preloader-k">K</span></div>
+      <div class="preloader-meta" aria-hidden="true"><span class="micro-label">Kannan / Webperience</span><span class="micro-label preloader-count" data-preloader-count>000</span></div>
+      <div class="preloader-gate" data-preloader-gate>
+        <p class="micro-label">This experience has sound.</p>
+        <div><button type="button" data-enter-sound data-magnetic>Enter with sound</button><button type="button" data-enter-quiet data-magnetic>Enter quietly</button></div>
+      </div>
+    </div>
+    <div class="transition-curtain" aria-hidden="true"><span class="curtain-line"></span><span class="curtain-mark">K</span></div>
+    <div class="scroll-progress" aria-hidden="true"><span></span></div>
+    <div class="cursor" aria-hidden="true"><span class="cursor-dot"></span><span class="cursor-ring"><span class="cursor-label" data-cursor-label></span></span></div>
     <a class="skip-link" href="#main-content">Skip to content</a>
     <header class="site-header">
       <a href="/" class="brand" aria-label="Kannan — home">K<span class="brand-a">A</span>NNAN</a>

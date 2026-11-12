@@ -1,0 +1,105 @@
+/* Detailing layer for the existing design: finishes, hovers and scroll-linked touches. */
+
+/* ---------- Film grain (very low opacity; gives the dark surfaces texture) ---------- */
+.grain {
+  position: fixed; inset: -60%; z-index: 80; pointer-events: none; opacity: .055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 1.1s steps(6) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); } 20% { transform: translate(-4%, 3%); } 40% { transform: translate(3%, -5%); }
+  60% { transform: translate(-6%, -2%); } 80% { transform: translate(5%, 4%); } 100% { transform: translate(0, 0); }
+}
+
+/* ---------- Header tucks away while reading ---------- */
+.site-header { transition: background .4s, border-color .4s, transform .6s var(--ease-out, ease); }
+.site-header.is-tucked { transform: translateY(-105%); }
+
+/* ---------- Rolling labels ---------- */
+.roll { display: inline-grid; overflow: hidden; vertical-align: top; line-height: 1.25; }
+.roll > span { grid-area: 1 / 1; transition: transform .55s var(--ease-out, ease); }
+.roll > span + span { transform: translateY(105%); }
+a:hover > .roll > span:first-child, a:focus-visible > .roll > span:first-child { transform: translateY(-105%); }
+a:hover > .roll > span + span, a:focus-visible > .roll > span + span { transform: translateY(0); }
+
+/* ---------- Text links draw an underline ---------- */
+.text-link {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  padding-bottom: 4px; transition: background-size .6s var(--ease-out, ease), color .25s;
+}
+.text-link:hover, .text-link:focus-visible { background-size: 100% 1px; }
+.text-link > span { transition: transform .45s var(--ease-out, ease); }
+.text-link:hover > span { transform: translate(3px, -3px); }
+
+/* ---------- Mobile menu numbering ---------- */
+.mobile-menu { counter-reset: menu; }
+.mobile-menu a { counter-increment: menu; display: flex; align-items: baseline; gap: 14px; }
+.mobile-menu a::before { content: '0' counter(menu); font: 10px var(--mono); color: var(--muted); }
+
+/* ---------- Experience timeline draws itself ---------- */
+.experience { overflow-x: clip; } /* the active title's nudge must never widen the page */
+.timeline { position: relative; }
+.timeline::before {
+  content: ''; position: absolute; left: calc(var(--pad) * -.5); top: 0; width: 1px; height: 100%;
+  background: #16171c; transform-origin: 50% 0; transform: scaleY(var(--progress, 0));
+}
+.timeline article { transition: opacity .6s var(--ease-out, ease); }
+.timeline article > .micro-label { transition: color .5s; }
+.timeline article h3 { transition: transform .7s var(--ease-out, ease); }
+.timeline article.is-active > .micro-label { color: #16171c; }
+.timeline article.is-active h3 { transform: translateX(12px); }
+
+/* ---------- "Make it felt" orbits counter-rotate with scroll ---------- */
+.manifesto { overflow-x: clip; } /* rotated orbits may pass the screen edge; never let them widen the page */
+.vision::before { transform: rotate(calc(-30deg + var(--spin, 0deg))); }
+.vision::after { transform: rotate(calc(30deg - var(--spin, 0deg))); }
+
+/* ---------- Capabilities: the arrow turns and a highlight passes ---------- */
+.capability-grid article { position: relative; overflow: hidden; isolation: isolate; }
+.capability-grid article::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(110deg, transparent 40%, #ffffff0a 50%, transparent 60%);
+  transform: translateX(-100%); transition: transform 1s var(--ease-out, ease);
+}
+.capability-grid article:hover::before { transform: translateX(100%); }
+.capability-grid h3 span { transition: transform .6s var(--ease-out, ease), color .3s; }
+.capability-grid article:hover h3 span { transform: rotate(45deg); color: #fff; }
+
+/* ---------- Contact: rotating text ring around the button ---------- */
+.contact-circle { position: relative; }
+.contact-ring {
+  position: absolute; inset: -42px; width: calc(100% + 84px); height: calc(100% + 84px); pointer-events: none;
+  fill: #b9bacb; font: 10.5px var(--mono); letter-spacing: .12em; text-transform: uppercase;
+  animation: ring-spin 22s linear infinite;
+}
+.contact-circle:hover .contact-ring { animation-duration: 7s; fill: #fff; }
+@keyframes ring-spin { to { transform: rotate(360deg); } }
+
+/* ---------- Footer wordmark and clock ---------- */
+/* .footer-name > span is the small ✳ mark in studio.css; the letter wrapper must not inherit it. */
+.footer-name > .footer-word { display: inline-flex; overflow: hidden; vertical-align: baseline; font: inherit; margin: 0; padding-bottom: .02em; }
+.footer-letter { display: inline-block; will-change: transform; }
+
+.footer-meta time { font-variant-numeric: tabular-nums; color: var(--ink); }
+
+/* ---------- Project pages ---------- */
+.project-preview figure a { display: block; overflow: hidden; }
+.next-project { position: relative; isolation: isolate; }
+.next-project h2 > span { display: inline-block; transition: transform .7s var(--ease-out, ease); }
+.next-project:hover h2 > span { transform: translate(10px, -10px) rotate(45deg); }
+.next-project::after {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--ink);
+  transform: scaleX(0); transform-origin: 0 50%; transition: transform 1s var(--ease-out, ease);
+}
+.next-project:hover::after { transform: scaleX(1); }
+.project-index-card { will-change: transform; }
+
+@media (prefers-reduced-motion: reduce) {
+  .grain { animation: none; }
+  .contact-ring { animation: none; }
+  .site-header.is-tucked { transform: none; }
+}
+@media (max-width: 760px) {
+  .contact-ring { inset: -32px; width: calc(100% + 64px); height: calc(100% + 64px); }
+  .timeline::before { left: -12px; }
+}

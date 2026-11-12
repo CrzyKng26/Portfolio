@@ -1,0 +1,68 @@
+---
+// Alias garage. getStaticPaths returns nothing unless the garage is enabled, so a
+// production build without PUBLIC_ALIAS_GARAGE=true contains no /alias/ page at all.
+import Studio from '../../layouts/Studio.astro';
+import { garageEnabled, garageModels, garageIsPreview } from '../../data/alias';
+import '../../styles/garage.css';
+
+export function getStaticPaths() {
+  if (!garageEnabled) return [];
+  return [{ params: { model: undefined } }];
+}
+const models = garageModels;
+const first = models[0];
+---
+<Studio title="Garage — Autodesk Alias work by Balachander Kannan" description="Surface modelling studies in Autodesk Alias, presented in a garage." noindex={garageIsPreview}>
+  <section class="garage" data-garage data-models={JSON.stringify(models)} aria-label="Autodesk Alias garage">
+    <div class="garage-canvas" data-garage-canvas aria-hidden="true"></div>
+
+    <div class="garage-shutter" data-garage-shutter aria-hidden="true">
+      {Array.from({ length: 14 }, () => <span></span>)}
+      <p class="micro-label">Garage / Autodesk Alias</p>
+    </div>
+
+    <header class="garage-top">
+      <div><span class="micro-label">Lower level / Autodesk Alias</span><h1>The Garage</h1></div>
+      {garageIsPreview && <span class="garage-badge micro-label">Private preview · placeholder forms</span>}
+    </header>
+
+    <div class="garage-plaque" data-garage-plaque aria-live="polite">
+      <span class="micro-label garage-bay">Bay <b data-g-index>01</b> / {String(models.length).padStart(2, '0')}</span>
+      <h2 data-g-name>{first.name}</h2>
+      <p class="micro-label" data-g-meta>{first.year} · {first.category}</p>
+      <p class="garage-summary" data-g-summary>{first.summary}</p>
+      <dl class="garage-specs">
+        <div><dt class="micro-label">Tools</dt><dd data-g-tools>{first.tools.join(' · ')}</dd></div>
+        <div><dt class="micro-label">Surfaces</dt><dd data-g-surfaces>{first.surfaces || '—'}</dd></div>
+        <div><dt class="micro-label">Hours</dt><dd data-g-hours>{first.hours || '—'}</dd></div>
+      </dl>
+      <div class="garage-actions">
+        <button type="button" class="garage-enter" data-g-enter data-magnetic data-cursor="Enter">Enter <span aria-hidden="true">↵</span></button>
+        <div class="garage-arrows">
+          <button type="button" data-g-prev aria-label="Previous bay">←</button>
+          <button type="button" data-g-next aria-label="Next bay">→</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="garage-inspect" data-g-inspect hidden>
+      <button type="button" class="garage-back text-link" data-g-back>← Back to the garage <span class="micro-label">Esc</span></button>
+      <div class="garage-modes" role="radiogroup" aria-label="Surface view">
+        {['Shaded', 'Zebra', 'Wire', 'Clay'].map((mode, i) => <button type="button" role="radio" aria-checked={i === 0 ? 'true' : 'false'} data-g-mode={mode.toLowerCase()}><span class="micro-label">{i + 1}</span>{mode}</button>)}
+      </div>
+      <div class="garage-paints" data-g-paints aria-label="Paint"></div>
+      <div class="garage-hotspots" data-g-hotspots></div>
+      <p class="garage-note" data-g-note aria-live="polite"></p>
+      <p class="garage-hint micro-label">Drag to orbit · Scroll to zoom · It keeps turning when you let go</p>
+    </div>
+
+    <p class="garage-hint garage-hint-browse micro-label" data-g-hint>Scroll · ← → · Enter</p>
+
+    <details class="garage-list">
+      <summary class="micro-label">List view</summary>
+      <ol>
+        {models.map((m, i) => <li><span class="micro-label">{String(i + 1).padStart(2, '0')}</span><div><h3>{m.name}</h3><p>{m.year} · {m.category} · {m.tools.join(', ')}</p><p>{m.summary}</p></div></li>)}
+      </ol>
+    </details>
+  </section>
+</Studio>

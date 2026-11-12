@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 import {mkdir} from 'node:fs/promises';
 
+// Existing journeys start after the preloader; tests/upgrade.spec.ts covers the gate itself.
+test.beforeEach(async({page})=>{await page.addInitScript(()=>sessionStorage.setItem('kannan:entered','1'));});
+
 test('home, real content, WebGL, gallery and Swup navigation',async({page})=>{
   const errors:string[]=[];
   page.on('pageerror',e=>errors.push(e.message));
@@ -43,6 +46,7 @@ test('home, real content, WebGL, gallery and Swup navigation',async({page})=>{
   await expect(page.locator('.profile-portrait img')).toHaveJSProperty('naturalWidth',560);
   await page.waitForTimeout(1300);
   await page.screenshot({path:'artifacts/about-desktop.png'});
+  await page.mouse.move(720,20); // the header tucks away while reading; reaching for it brings it back
   await page.getByRole('link',{name:'Experience',exact:true}).first().click();
   await page.waitForTimeout(1300);
   await page.screenshot({path:'artifacts/experience-desktop.png'});

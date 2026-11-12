@@ -54,6 +54,32 @@ export const projects = [
   },
 ];
 
+// Credentials verified from the certificate PDFs supplied on 2026-11-12.
+// `featured` entries get the large card; the rest render as an index list.
+export type Credential = {
+  title: string; issuer: string; date: string; year: string; group: 'AI' | 'Cloud & Security' | 'IT Operations';
+  detail: string; url?: string; featured?: boolean; expires?: string;
+};
+
+export const credentials: Credential[] = [
+  { title: 'Claude Certified Developer — Foundations', issuer: 'Anthropic', date: 'Aug 2026', year: '2026', expires: 'Aug 2027', group: 'AI', featured: true,
+    detail: 'Building with Claude: prompting, tool use, agents and the API, applied to real automation systems.', url: 'https://www.credly.com/badges/4454d4ef-855a-4596-be5d-5e60fdfaed18' },
+  { title: 'Azure AI Fundamentals', issuer: 'Microsoft', date: 'AI-900', year: '—', group: 'AI', featured: true,
+    detail: 'Foundational cloud-AI literacy, applied to real agent and automation systems.' },
+  { title: 'Introduction to Machine Learning for Data Science', issuer: 'Udemy · David Valentine', date: 'Oct 2026', year: '2026', group: 'AI',
+    detail: '5.5 hours', url: 'https://ude.my/UC-452ccaea-c93c-459d-bc8d-289e2344d439' },
+  { title: 'AI Literacy Basics: Applying Generative AI in the Workplace', issuer: 'Udemy · Nicolle Merrill', date: 'Oct 2026', year: '2026', group: 'AI',
+    detail: '5 hours', url: 'https://ude.my/UC-5e7cc2c0-d129-41ef-b557-55f4078dc253' },
+  { title: 'Cloud Computing Fundamentals', issuer: 'Udemy · Mohamed Rhim', date: 'Oct 2026', year: '2026', group: 'Cloud & Security',
+    detail: '3 hours', url: 'https://ude.my/UC-8c65aef7-320d-440c-a4c3-470948cb267c' },
+  { title: 'Cyber Security Awareness Training', issuer: 'Udemy · Learnsector LLP', date: 'Oct 2026', year: '2026', group: 'Cloud & Security',
+    detail: '1.5 hours', url: 'https://ude.my/UC-13b56baa-5123-4989-ae39-b1acced82246' },
+  { title: 'Introduction to Service Management with ITIL 4', issuer: 'Udemy · Jason Dion', date: 'Nov 2024', year: '2024', group: 'IT Operations',
+    detail: '2 hours', url: 'https://ude.my/UC-60bda2a8-ae3f-4b72-8018-b7f47caa564a' },
+  { title: 'PowerShell for Active Directory Administrators', issuer: 'Udemy · Kevin Brown', date: 'Nov 2024', year: '2024', group: 'IT Operations',
+    detail: '3 hours', url: 'https://ude.my/UC-255b81e7-0641-4948-ae8e-5b0fd89c27ec' },
+];
+
 export const capabilities = [
   { title: 'Build', text: 'Web products and business sites. From a crochet business to a VR cricket brand.', tags: 'Websites · Products · Commerce' },
   { title: 'Automate', text: 'AI-agent systems and workflow automation. From enterprise VBA tooling to a three-model AI pipeline.', tags: 'AI agents · Python · Workflows' },

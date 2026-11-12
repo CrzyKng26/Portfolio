@@ -1,12 +1,14 @@
 ---
 import Studio from '../layouts/Studio.astro';
 import ProjectArt from '../components/studio/ProjectArt.astro';
-import { profile, projects, capabilities } from '../data/portfolio';
+import { profile, projects, capabilities, credentials } from '../data/portfolio';
+const featured = credentials.filter(c => c.featured);
+const courses = credentials.filter(c => !c.featured);
 ---
 <Studio home>
   <div id="world" aria-hidden="true"><div class="world-fallback"></div></div>
   <aside class="chapter-rail" aria-label="Page sections">
-    {['top','works','about','experience','capabilities','contact'].map((id,i)=><a href={`#${id}`} class:list={['chapter', {active:i===0}]} data-chapter={id} aria-label={id}><span>{id}</span><i></i></a>)}
+    {['top','works','about','experience','credentials','capabilities','contact'].map((id,i)=><a href={`#${id}`} class:list={['chapter', {active:i===0}]} data-chapter={id} aria-label={id}><span>{id}</span><i></i></a>)}
   </aside>
   <section class="hero" id="top" aria-label="Balachander Kannan — independent developer">
     <div class="hero-stage">
@@ -31,46 +33,61 @@ import { profile, projects, capabilities } from '../data/portfolio';
     <div class="works-stage">
       <div class="section-heading"><h2 id="works-title">Selected works</h2><span class="micro-label"><b data-work-number>01</b> / {projects.length.toString().padStart(2,'0')}</span></div>
       <div class="gallery" aria-label="Featured project gallery">
-        {projects.map((project,index)=><a class="gallery-card" href={`/work/${project.slug}/`} data-index={index} aria-label={`Explore ${project.title}`} style={`--project-color:${project.color}`}><ProjectArt project={project} eager={index<3}/><span class="gallery-card-caption">{project.title}<span>View project ↗</span></span></a>)}
+        {projects.map((project,index)=><a class="gallery-card" data-cursor="View" href={`/work/${project.slug}/`} data-index={index} aria-label={`Explore ${project.title}`} style={`--project-color:${project.color}`}><ProjectArt project={project} eager={index<3}/><span class="gallery-card-caption">{project.title}<span>View project ↗</span></span></a>)}
       </div>
       <div class="work-caption" aria-live="polite"><div><span class="micro-label" data-work-meta>{projects[0].year} / {projects[0].category}</span><h3 data-work-title>{projects[0].title}</h3><p data-work-description>{projects[0].focus}</p><div class="work-tags" data-work-tags>{projects[0].tags.map(t=><span>{t}</span>)}</div></div><div class="work-actions"><a href={`/work/${projects[0].slug}/`} class="text-link" data-work-link>View project <span>↗</span></a><a href="/works/" class="text-link">All works <span>↗</span></a></div></div>
       <div class="gallery-controls"><button data-gallery-prev aria-label="Previous project">←</button><span class="micro-label">Scroll or explore</span><button data-gallery-next aria-label="Next project">→</button></div>
     </div>
   </section>
+  <div class="velocity-marquee" aria-hidden="true"><div class="velocity-track">{Array.from({length:4},()=> <span>Websites that feel <i>✳</i> Systems that ship <i>✳</i> Make it felt <i>✳</i> Then make it work <i>✳</i> </span>)}</div></div>
   <section id="about" class="manifesto section-pad">
     <span class="micro-label section-index">02 / About</span>
-    <h2 data-reveal>Builder by instinct.<br/><span>Operator by necessity.</span></h2>
+    <h2 data-split>Builder by instinct.<br/><span>Operator by necessity.</span></h2>
     <div class="about-columns">
       <div class="about-identity" data-reveal>
         <figure class="profile-portrait">
           <img src="/images/profile/kannan-passport.webp" alt="Balachander Kannan" width="560" height="723" loading="lazy" decoding="async" />
           <figcaption><span>{profile.name}</span><span class="micro-label">{profile.location}</span></figcaption>
         </figure>
-        <p class="large-copy">A website should feel like your business before it explains it.</p>
+        <p class="large-copy" data-split="lines">A website should feel like your business before it explains it.</p>
       </div>
       <div class="body-copy" data-reveal><p>{profile.intro}</p><p>I started in enterprise IT operations at TCS, looking at repetitive manual work and asking: why isn’t this automated? That instinct became AI-agent systems, data tools, web products, and a real business — The Hooked Tales.</p><a href="#experience" class="text-link">The story so far ↘</a></div>
     </div>
-    <div class="vision"><span class="micro-label">My approach / Webperience</span><p data-reveal>Make it <i>felt.</i><br/>Then make it <i>work.</i></p><span class="vision-caption">Design, engineering, and a reason to exist.</span></div>
+    <div class="vision"><span class="micro-label">My approach / Webperience</span><p data-split>Make it <i>felt.</i><br/>Then make it <i>work.</i></p><span class="vision-caption">Design, engineering, and a reason to exist.</span></div>
   </section>
   <section id="experience" class="experience section-pad">
-    <div class="section-heading"><h2>From operating<br/>to building.</h2><span class="micro-label">03 / Experience</span></div>
+    <div class="section-heading"><h2 data-split>From operating<br/>to building.</h2><span class="micro-label">03 / Experience</span></div>
     <div class="timeline">
       <article data-reveal><span class="micro-label">01 / Enterprise</span><div><h3>Tata Consultancy Services</h3><h4>Assistant Systems Engineer — End User Computing</h4><p>High-volume enterprise IT operations and internal tooling. Built Radia Remediation: a VBA automation that detects files, remaps statuses in two phases, and produces SharePoint-ready spreadsheets.</p></div></article>
       <article data-reveal><span class="micro-label">02 / 2024 — Present</span><div><h3>Independent builder</h3><h4>AI agents, data tools & automation</h4><p>AI-agent systems, data tools, and workflow automation built around clear architecture, human judgment, and ownership of the outcome.</p></div></article>
       <article data-reveal><span class="micro-label">03 / 2024 — Present</span><div><h3>The Hooked Tales</h3><h4>Co-founder — operations, web & marketing</h4><p>Product planning, pricing, a live retail launch, the website, and the ongoing commercial operation of a handmade crochet business.</p></div></article>
       <article data-reveal><span class="micro-label">04 / 2024 — Present</span><div><h3>Independent client work</h3><h4>Web design & development</h4><p>Hokkaido and V20 VR Cricket. Websites that translate the atmosphere and identity of a business into an experience in the browser.</p></div></article>
     </div>
-    <div class="credential"><span class="credential-mark" aria-hidden="true">✳</span><div><span class="micro-label">Microsoft certification</span><h3>Azure AI Fundamentals</h3><p>Foundational cloud-AI literacy, applied to real agent and automation systems.</p></div></div>
+  </section>
+  <section id="credentials" class="credentials section-pad" aria-labelledby="credentials-title">
+    <div class="section-heading"><h2 id="credentials-title" data-split>Always<br/><i>learning.</i></h2><span class="micro-label">04 / Credentials · {credentials.length.toString().padStart(2,'0')}</span></div>
+    <div class="credential-featured">
+      {featured.map((c,i)=><article class="credential-card" data-reveal>
+        <span class="credential-glyph" aria-hidden="true">{i===0?'✳':'◆'}</span>
+        <span class="micro-label">{c.issuer} · {c.date}{c.expires && ` — valid to ${c.expires}`}</span>
+        <h3>{c.title}</h3>
+        <p>{c.detail}</p>
+        {c.url ? <a class="text-link" href={c.url} target="_blank" rel="noreferrer" data-cursor="Verify">Verify credential <span>↗</span></a> : <span class="micro-label credential-status">Certified</span>}
+      </article>)}
+    </div>
+    <ol class="credential-index">
+      {courses.map((c,i)=><li data-reveal><a href={c.url} target="_blank" rel="noreferrer" data-cursor="Verify" aria-label={`${c.title}, ${c.issuer}, ${c.date}. Verify certificate`}><span class="micro-label">{String(i+1).padStart(2,'0')}</span><span class="credential-title">{c.title}</span><span class="micro-label credential-meta">{c.issuer}</span><span class="micro-label credential-meta credential-group">{c.group}</span><span class="micro-label credential-date">{c.date}<i aria-hidden="true">↗</i></span></a></li>)}
+    </ol>
   </section>
   <section id="capabilities" class="capabilities section-pad">
-    <div class="section-heading"><h2>Ideas, made real.</h2><span class="micro-label">04 / Capabilities</span></div>
+    <div class="section-heading"><h2 data-split>Ideas, made real.</h2><span class="micro-label">05 / Capabilities</span></div>
     <div class="capability-grid">{capabilities.map((item,i)=><article data-reveal><span class="micro-label">0{i+1}</span><h3>{item.title}<span>↗</span></h3><p>{item.text}</p><span class="micro-label">{item.tags}</span></article>)}</div>
     <div class="ai-statement"><span class="micro-label">How I build</span><p data-reveal>AI accelerates the work.<br/><span>I own the decisions.</span></p><div class="body-copy">Research, prototyping, debugging, and iteration move faster with AI. Problem definition, architecture, UX judgment, validation, and final accountability stay with me.</div></div>
   </section>
   <section id="contact" class="contact-section section-pad">
     <span class="micro-label"><i class="availability-dot"></i> Open to select freelance & collaboration work</span>
-    <h2 data-reveal>Let’s build<br/><i>something useful.</i></h2>
-    <div class="contact-row"><p>A brand with a story.<br/>A product with a purpose.<br/>A process worth improving.</p><a class="contact-circle" href={profile.linkedin} target="_blank" rel="noreferrer" aria-label="Contact Balachander Kannan on LinkedIn">Let’s talk<span>↗</span></a></div>
+    <h2 data-split>Let’s build<br/><i>something useful.</i></h2>
+    <div class="contact-row"><p>A brand with a story.<br/>A product with a purpose.<br/>A process worth improving.</p><a class="contact-circle" data-magnetic data-cursor="Say hi" href={profile.linkedin} target="_blank" rel="noreferrer" aria-label="Contact Balachander Kannan on LinkedIn"><svg class="contact-ring" viewBox="0 0 200 200" aria-hidden="true"><defs><path id="contact-ring-path" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0"/></defs><text><textPath href="#contact-ring-path" textLength="510" lengthAdjust="spacing">Let’s build something useful ✳ Open to collaborations ✳ </textPath></text></svg>Let’s talk<span>↗</span></a></div>
     <a class="text-link" href={profile.linkedin} target="_blank" rel="noreferrer">Find me on LinkedIn ↗</a>
   </section>
 </Studio>

@@ -5,6 +5,8 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { projects } from '../data/portfolio';
+import { initPreloader, initCursor, initMagnetic, initSplitReveals, initVelocityMarquee, initScrollProgress, playHeroEntrance, initHeroParallax } from './motion';
+import { initChromeDetail, initPageDetail } from './detail';
 
 gsap.registerPlugin(ScrollTrigger);
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -25,6 +27,9 @@ if(lenis){
   });
 }
 let cleanupPage=()=>{};
+let markEntered:()=>void=()=>{};
+const entered=new Promise<void>(resolve=>{markEntered=resolve;});
+let heroPlayed=false;
 
 function initializePage(){
   cleanupPage();
@@ -36,6 +41,13 @@ function initializePage(){
   if(host)void import('./world').then(({createWorld})=>{
     if(!disposed&&host.isConnected)disposers.push(createWorld(host));
   }).catch(()=>{host.dataset.model='unavailable';});
+  disposers.push(initMagnetic(),initSplitReveals(),initPageDetail(),initVelocityMarquee(lenis),initScrollProgress(),initHeroParallax());
+  if(home&&!heroPlayed){void entered.then(()=>{if(!disposed&&!heroPlayed){heroPlayed=true;disposers.push(playHeroEntrance());}});}
+  // The Alias garage is a private preview route; its engine loads only when the page exists.
+  const garageHost=document.querySelector<HTMLElement>('[data-garage]');
+  if(garageHost)void import('./garage/garage').then(({createGarage})=>{
+    if(!disposed&&garageHost.isConnected)disposers.push(createGarage(garageHost,lenis));
+  }).catch(error=>{console.warn('Garage unavailable',error);garageHost.dataset.state='unavailable';});
   const context=gsap.context(()=>{
     if(!reduced){
       const hero=document.querySelector<HTMLElement>('.hero');
@@ -152,15 +164,35 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMenu();menuBut
 // Audio only starts after an explicit click. No downloaded audio or autoplay.
 const soundButton=document.querySelector<HTMLButtonElement>('.sound-button')!;
 let audioContext:AudioContext|null=null;
-soundButton.addEventListener('click',async()=>{
-  if(!audioContext){audioContext=new AudioContext();const gain=audioContext.createGain();gain.gain.value=.025;gain.connect(audioContext.destination);[110,164.81,220.1].forEach(frequency=>{const oscillator=audioContext!.createOscillator();oscillator.type='sine';oscillator.frequency.value=frequency;oscillator.connect(gain);oscillator.start();});await audioContext.suspend();}
-  const enabled=soundButton.getAttribute('aria-pressed')!=='true';
-  if(enabled)await audioContext.resume();else await audioContext.suspend();
+function buildAmbience(context:AudioContext){
+  const master=context.createGain();master.gain.value=0;master.connect(context.destination);
+  const filter=context.createBiquadFilter();filter.type='lowpass';filter.frequency.value=900;filter.Q.value=.4;filter.connect(master);
+  // Detuned pairs give a slow, breathing chord instead of a static tone.
+  [[110,.0],[110.6,.0],[164.81,.0],[220.1,.0],[329.6,.0]].forEach(([frequency],i)=>{
+    const osc=context.createOscillator();osc.type=i%2?'triangle':'sine';osc.frequency.value=frequency;
+    const voice=context.createGain();voice.gain.value=i>3?.12:.28;osc.connect(voice).connect(filter);osc.start();
+  });
+  const lfo=context.createOscillator();lfo.frequency.value=.07;const depth=context.createGain();depth.gain.value=420;
+  lfo.connect(depth).connect(filter.frequency);lfo.start();
+  return master;
+}
+let master:GainNode|null=null;
+async function setSound(enabled:boolean){
+  if(!audioContext){audioContext=new AudioContext();master=buildAmbience(audioContext);}
+  const now=audioContext.currentTime;
+  if(enabled){await audioContext.resume();master!.gain.cancelScheduledValues(now);master!.gain.setTargetAtTime(.03,now,.6);}
+  else{master!.gain.cancelScheduledValues(now);master!.gain.setTargetAtTime(0,now,.15);setTimeout(()=>{if(soundButton.getAttribute('aria-pressed')!=='true')void audioContext?.suspend();},600);}
   soundButton.setAttribute('aria-pressed',String(enabled));soundButton.setAttribute('aria-label',enabled?'Mute ambient sound':'Enable ambient sound');
-});
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&audioContext){void audioContext.suspend();soundButton.setAttribute('aria-pressed','false');soundButton.setAttribute('aria-label','Enable ambient sound');}});
+}
+soundButton.addEventListener('click',()=>void setSound(soundButton.getAttribute('aria-pressed')!=='true'));
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&audioContext&&soundButton.getAttribute('aria-pressed')==='true')void setSound(false);});
 swup.hooks.before('content:replace',()=>{closeMenu();cleanupPage();cleanupPage=()=>{};});
 swup.hooks.on('page:view',()=>{initializePage();lenis?.resize();ScrollTrigger.refresh();});
+initCursor();
+initChromeDetail(lenis);
+if(!document.documentElement.classList.contains('preloaded'))lenis?.stop();
+initPreloader(withSound=>{lenis?.start();if(withSound)void setSound(true);markEntered();});
+if(document.documentElement.classList.contains('preloaded'))markEntered();
 initializePage();
 
 // Restore an initial deep link after the sticky chapters and scroll owner exist.

@@ -115,17 +115,21 @@ export function initSplitReveals(scope: ParentNode = document): Dispose {
   const targets = [...scope.querySelectorAll<HTMLElement>('[data-split]')];
   if (reduced || !targets.length) return () => {};
   const splits: SplitText[] = [];
-  const tweens: gsap.core.Tween[] = [];
   targets.forEach(el => {
     // Lines are masked so each one rises out of its own baseline.
-    const split = SplitText.create(el, { type: 'lines,words', linesClass: 'split-line', mask: 'lines', aria: 'auto' });
-    splits.push(split);
-    tweens.push(gsap.from(split.words, {
-      yPercent: 115, rotate: 4, duration: 1.15, ease: 'expo.out', stagger: .035,
-      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+    // data-split="lines" moves whole lines (body copy); the default moves words (headings).
+    // autoSplit re-splits when the width or fonts change, so lines never keep a stale desktop wrap;
+    // returning the tween from onSplit lets SplitText carry its progress across re-splits.
+    const byLine = el.dataset.split === 'lines';
+    splits.push(SplitText.create(el, {
+      type: byLine ? 'lines' : 'lines,words', linesClass: 'split-line', mask: 'lines', aria: 'auto', autoSplit: true,
+      onSplit: self => gsap.from(byLine ? self.lines : self.words, {
+        yPercent: byLine ? 100 : 115, rotate: byLine ? 0 : 4, duration: byLine ? 1.3 : 1.15, ease: 'expo.out', stagger: byLine ? .09 : .035,
+        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+      }),
     }));
   });
-  return () => { tweens.forEach(t => { t.scrollTrigger?.kill(); t.kill(); }); splits.forEach(s => s.revert()); };
+  return () => splits.forEach(s => s.revert());
 }
 
 export function initVelocityMarquee(lenis: Lenis | null, scope: ParentNode = document): Dispose {

@@ -125,6 +125,18 @@
 ## Work Log
 _Newest first. Format: `### [YYYY-MM-DD HH:MM] Title` → Done / Files / Decisions / Next._
 
+### [2026-11-12 17:35] Detailing pass on the existing design
+- **Done:** Kept the original layout and content and added a detailing layer:
+  - Film grain; the header tucks away on scroll down and returns on scroll up or when the mouse reaches the top.
+  - Rolling nav labels, drawn text-link underlines, and a numbered, staggered mobile menu.
+  - Section labels that scramble into place, and image wipes on the portrait, project covers and previews.
+  - The Experience timeline line draws on scroll and highlights each chapter; the "Make it felt" orbits counter-rotate.
+  - Capability hover sweeps, a rotating text ring on the "Let's talk" button, a footer wordmark that rises letter by letter, and a live Chennai clock.
+  - Tilting work cards with staggered entry, a parallax screenshot on project pages, a "Next project" hover, and body copy revealed by line.
+- **Fixes:** Split text now re-splits on resize (`autoSplit`), so there's no stale desktop wrap on mobile. Experience and About are clipped horizontally so the motion can't widen the page.
+- **Files:** new `src/scripts/detail.ts` and `src/styles/detail.css`; edited `motion.ts`, `site.ts`, `Studio.astro`, `index.astro`, `works.astro`, `work/[slug].astro`, `tests/portfolio.spec.ts`.
+- **Verified:** astro check reports 0 errors; Playwright 10/10; the production build has 6 pages; screenshots were reviewed for experience, contact, footer, works and the mobile menu.
+
 ### [2026-11-12 15:15] Motion layer, credentials section, private Alias Garage
 - **Done:**
   - Preloader with a sound gate (once per session).

@@ -49,11 +49,11 @@ const courses = credentials.filter(c => !c.featured);
           <img src="/images/profile/kannan-passport.webp" alt="Balachander Kannan" width="560" height="723" loading="lazy" decoding="async" />
           <figcaption><span>{profile.name}</span><span class="micro-label">{profile.location}</span></figcaption>
         </figure>
-        <p class="large-copy">A website should feel like your business before it explains it.</p>
+        <p class="large-copy" data-split="lines">A website should feel like your business before it explains it.</p>
       </div>
       <div class="body-copy" data-reveal><p>{profile.intro}</p><p>I started in enterprise IT operations at TCS, looking at repetitive manual work and asking: why isn’t this automated? That instinct became AI-agent systems, data tools, web products, and a real business — The Hooked Tales.</p><a href="#experience" class="text-link">The story so far ↘</a></div>
     </div>
-    <div class="vision"><span class="micro-label">My approach / Webperience</span><p data-reveal>Make it <i>felt.</i><br/>Then make it <i>work.</i></p><span class="vision-caption">Design, engineering, and a reason to exist.</span></div>
+    <div class="vision"><span class="micro-label">My approach / Webperience</span><p data-split>Make it <i>felt.</i><br/>Then make it <i>work.</i></p><span class="vision-caption">Design, engineering, and a reason to exist.</span></div>
   </section>
   <section id="experience" class="experience section-pad">
     <div class="section-heading"><h2 data-split>From operating<br/>to building.</h2><span class="micro-label">03 / Experience</span></div>
@@ -87,7 +87,7 @@ const courses = credentials.filter(c => !c.featured);
   <section id="contact" class="contact-section section-pad">
     <span class="micro-label"><i class="availability-dot"></i> Open to select freelance & collaboration work</span>
     <h2 data-split>Let’s build<br/><i>something useful.</i></h2>
-    <div class="contact-row"><p>A brand with a story.<br/>A product with a purpose.<br/>A process worth improving.</p><a class="contact-circle" data-magnetic data-cursor="Say hi" href={profile.linkedin} target="_blank" rel="noreferrer" aria-label="Contact Balachander Kannan on LinkedIn">Let’s talk<span>↗</span></a></div>
+    <div class="contact-row"><p>A brand with a story.<br/>A product with a purpose.<br/>A process worth improving.</p><a class="contact-circle" data-magnetic data-cursor="Say hi" href={profile.linkedin} target="_blank" rel="noreferrer" aria-label="Contact Balachander Kannan on LinkedIn"><svg class="contact-ring" viewBox="0 0 200 200" aria-hidden="true"><defs><path id="contact-ring-path" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0"/></defs><text><textPath href="#contact-ring-path" textLength="510" lengthAdjust="spacing">Let’s build something useful ✳ Open to collaborations ✳ </textPath></text></svg>Let’s talk<span>↗</span></a></div>
     <a class="text-link" href={profile.linkedin} target="_blank" rel="noreferrer">Find me on LinkedIn ↗</a>
   </section>
 </Studio>

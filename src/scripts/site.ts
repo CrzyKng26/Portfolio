@@ -6,6 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { projects } from '../data/portfolio';
 import { initPreloader, initCursor, initMagnetic, initSplitReveals, initVelocityMarquee, initScrollProgress, playHeroEntrance, initHeroParallax } from './motion';
+import { initChromeDetail, initPageDetail } from './detail';
 
 gsap.registerPlugin(ScrollTrigger);
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -40,7 +41,7 @@ function initializePage(){
   if(host)void import('./world').then(({createWorld})=>{
     if(!disposed&&host.isConnected)disposers.push(createWorld(host));
   }).catch(()=>{host.dataset.model='unavailable';});
-  disposers.push(initMagnetic(),initSplitReveals(),initVelocityMarquee(lenis),initScrollProgress(),initHeroParallax());
+  disposers.push(initMagnetic(),initSplitReveals(),initPageDetail(),initVelocityMarquee(lenis),initScrollProgress(),initHeroParallax());
   if(home&&!heroPlayed){void entered.then(()=>{if(!disposed&&!heroPlayed){heroPlayed=true;disposers.push(playHeroEntrance());}});}
   // The Alias garage is a private preview route; its engine loads only when the page exists.
   const garageHost=document.querySelector<HTMLElement>('[data-garage]');
@@ -188,6 +189,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&audioConte
 swup.hooks.before('content:replace',()=>{closeMenu();cleanupPage();cleanupPage=()=>{};});
 swup.hooks.on('page:view',()=>{initializePage();lenis?.resize();ScrollTrigger.refresh();});
 initCursor();
+initChromeDetail(lenis);
 if(!document.documentElement.classList.contains('preloaded'))lenis?.stop();
 initPreloader(withSound=>{lenis?.start();if(withSound)void setSound(true);markEntered();});
 if(document.documentElement.classList.contains('preloaded'))markEntered();

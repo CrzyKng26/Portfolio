@@ -137,7 +137,7 @@ _Newest first. Format: `### [YYYY-MM-DD HH:MM] Title` → Done / Files / Decisio
   - Edited: `index.astro`, `Studio.astro`, `site.ts`, `portfolio.ts`, `ProjectArt.astro`, `env.d.ts`, `tests/portfolio.spec.ts`.
 - **Verified:** `astro check` reports 0 errors. Playwright: 10/10 pass on the dev server. The production build has 6 pages and no `/alias/`. A build with `PUBLIC_ALIAS_GARAGE=true` includes `/alias/` (noindex). There is no horizontal overflow at 390 px.
 - **Decisions:** The garage is hidden by build flag, not just unlinked. A single moving area light keeps the garage cheap on integrated GPUs. The shutter uses a CSS transition (wall-clock) so it never stalls. The preloader is a labelled dialog (accessible).
-- **Not done / next:** P0 cleanup, full-screen menu, shared-element transitions, works filters, case studies, real Alias models, Higgsfield clips. Nothing committed yet.
+- **Not done / next:** P0 cleanup, full-screen menu, shared-element transitions, works filters, case studies, real Alias models, Higgsfield clips. Committed as `ab67961` on branch `feature/motion-credentials-garage` (not pushed, not merged).
 
 ### [2026-11-12 13:35] Obsidian project note refreshed
 - **Done:** With Kannan's approval, replaced the stale "Next.js / Unknown" content in `D:\Obsidian\01_Projects\webdev-portfolio--Kannan-main-.md` with verified facts and the current plan status.

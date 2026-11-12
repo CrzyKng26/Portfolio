@@ -26,6 +26,8 @@
 
 **Current focus:** Motion layer and credentials are live on the public site. The Alias Garage is built as a private preview with placeholder forms, waiting for real models (future work). Next: P0 cleanup and P6 case studies.
 
+**Live:** https://kannabuilds.vercel.app (Vercel project `kannabuilds/kannabuilds`; this folder is linked to it, and you deploy with `vercel deploy --prod`). The original site's last deployment, `kannabuilds-6hjvfjrve`, is kept for rollback.
+
 **Garage visibility:** `/alias/` exists only in `npm run dev`, or when the build sets `PUBLIC_ALIAS_GARAGE=true`. To launch it, add models to `src/data/alias.ts`, set the env var on Vercel, and add a nav link.
 
 ---
@@ -119,11 +121,31 @@
 - Higgsfield: the connected workspace has 0 credits (free plan) and the connector cannot generate media. Generate clips in Higgsfield directly, then drop them into `public/videos/`
 - Accent colour and font licensing decision (blocks P1)
 - Custom domain? (blocks P8)
+- Vercel auto-deploy: `vercel git connect` failed because the Vercel GitHub app has no access to `CrzyKng26/Portfolio`. Grant it on GitHub (Settings → Applications → Vercel → Repository access), then run `vercel git connect`. Until then, deploy with `vercel deploy --prod`
+- The trial project `kannan-portfolio` (kannan-portfolio-blush.vercel.app) is now redundant. Delete it in the Vercel dashboard if it isn't wanted
 
 ---
 
 ## Work Log
 _Newest first. Format: `### [YYYY-MM-DD HH:MM] Title` → Done / Files / Decisions / Next._
+
+### [2026-11-12 19:40] Upgrade live on kannabuilds.vercel.app
+- **Done:** Linked this folder to the existing `kannabuilds` project and deployed to production (`kannabuilds-a2z0v9ct4`). The upgrade now replaces the original site on the same domain.
+- **Verified:** `/` and `/works/` return 200, and `/alias/` returns 404. The page has the preloader, credentials, contact ring and clock.
+- **Rollback:** the original's deployment `kannabuilds-6hjvfjrve` is still in the project. Run `vercel rollback kannabuilds-6hjvfjrve-kannabuilds.vercel.app --scope kannabuilds`, or use Instant Rollback in the dashboard.
+- **Decisions:** The user chose to deploy into the same project rather than move the domain.
+
+### [2026-11-12 19:10] Deployed to Vercel
+- **Done:**
+  - Installed Vercel CLI 65.14.0 and logged in. Avast HTTPS scanning requires `NODE_EXTRA_CA_CERTS=C:\ProgramData\Avast Software\Avast\wscert.pem` and `NODE_USE_SYSTEM_CA=1`.
+  - Created a separate project, `kannan-portfolio`, in the kannabuilds team, linked this folder to it, and deployed to production.
+- **Live:** https://kannan-portfolio-blush.vercel.app
+  - `/` and `/works/` return 200, and `/alias/` returns 404.
+  - The page has the preloader, credentials, contact ring and clock, with no console errors.
+- **Decisions:** Kept the new site in its own project, so the original at kannabuilds.vercel.app is untouched until the user decides.
+- **Next:**
+  - Give the Vercel GitHub app access to the repo, then run `vercel git connect` to turn on auto-deploys.
+  - Decide whether to move kannabuilds.vercel.app to the new site.
 
 ### [2026-11-12 17:35] Detailing pass on the existing design
 - **Done:** Kept the original layout and content and added a detailing layer:
